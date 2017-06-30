@@ -1,0 +1,49 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: iptables-shield-config
+  namespace: kube-system
+data:
+  default.acl: |-
+    allow dport:22
+    allow dport:80
+    allow dport:443
+    allow dport:6443
+    deny
+
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: shield
+  namespace: kube-system
+  labels:
+    k8s-app: shield
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: shield
+    spec:
+      containers:
+      - name: iptables-shield
+        image: cofyc/iptables-shield:latest
+        command:
+        - /run.sh
+        - /etc/iptables-shield/default.acl
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/iptables-shield
+          name: iptables-shield-config
+          readOnly: false
+      volumes:
+      - name: iptables-shield-config
+        configMap:
+          name: iptables-shield-config
+      hostNetwork: true
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      restartPolicy: Always
