@@ -9,4 +9,4 @@ ADD run.sh /
 ADD default.acl /etc/iptables-shield/default.acl
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/run.sh", "/etc/iptables-shield/default.acl"]
+CMD ["/run.sh", "/etc/iptables-shield"]

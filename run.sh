@@ -5,14 +5,26 @@ if [ "$1" == "" ]; then
     exit 1
 fi
 
-if [ ! -f "$1" ]; then
-    echo "fatal: acl file '$1' does not exist or not a file"
+if [ ! -e "$1" ]; then
+    echo "fatal: acl file '$1' does not exist"
     exit 2
 fi
 
-FILE=$1
+function run() {
+    local file=$1
+    if [ -f "$file" ]; then
+        /shield.sh $file
+    elif [ -d "$file" ]; then
+        cd $file
+        ls . | sort | xargs -r cat | /shield.sh
+    else
+        echo "unsupported type '$file'"
+        exit 1
+    fi
+}
 
-/shield.sh $FILE 
-while inotifywait -e modify $FILE; do
-    /shield.sh $FILE 
+run $1
+inotifywait -m -e modify,create,delete $1 2>/dev/null | while read -r line; do
+    echo "run.sh: $line"
+    run $1
 done
