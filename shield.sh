@@ -27,7 +27,7 @@ function exit_with_status() {
 }
 
 function try_run() {
-    echo $@  
+    echo "INFO: RUN '$@'" 
     $@  
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
@@ -50,7 +50,7 @@ function teardown_chain() {
 
 function setup_chain() {
     local chain=$1
-    local file=$2
+    local file=${2:-/dev/stdin}
 
     # create chain
     try_run iptables --new-chain $chain

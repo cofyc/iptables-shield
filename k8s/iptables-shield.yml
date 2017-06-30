@@ -15,15 +15,15 @@ data:
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: shield
+  name: iptables-shield
   namespace: kube-system
   labels:
-    k8s-app: shield
+    k8s-app: iptables-shield
 spec:
   template:
     metadata:
       labels:
-        k8s-app: shield
+        k8s-app: iptables-shield
     spec:
       containers:
       - name: iptables-shield
