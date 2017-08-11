@@ -3,9 +3,8 @@
 set -e
 
 # Add default command if needed.
-
 if [ "${1:0:1}" = '-' ]; then
-    set -- /run.sh "$@"
+    set -- /watch.sh "$@"
 fi
 
 exec "$@"

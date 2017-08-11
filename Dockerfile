@@ -1,12 +1,12 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 RUN set -x \
-    && apk add --no-cache iptables inotify-tools bash
+    && apk add --no-cache iptables bash
 
 ADD shield.sh /
 ADD entrypoint.sh /
-ADD run.sh /
+ADD watch.sh /
 ADD default.acl /etc/iptables-shield/default.acl
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/run.sh", "/etc/iptables-shield"]
+CMD ["/watch.sh", "/etc/iptables-shield/default.acl"]

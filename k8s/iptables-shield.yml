@@ -28,8 +28,7 @@ spec:
       containers:
       - name: iptables-shield
         image: cofyc/iptables-shield:latest
-        command:
-        - /run.sh
+        args:
         - /etc/iptables-shield/default.acl
         imagePullPolicy: Always
         securityContext:
