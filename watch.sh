@@ -13,7 +13,7 @@ fi
 
 file=$1
 
-# It's complicated to use inotify on all situations (especially with symbolic links).
+# It's too complicated to use inotify on all situations (especially with symbolic links).
 # So we simply check acl contents periodically.
 CACHE=/tmp/cache.acl
 CACHE_TMP=/tmp/cache.acl.tmp
@@ -36,8 +36,3 @@ while true; do
     fi
     sleep 1
 done
-
-# inotifywait -m -e modify,create,delete $1 2>/dev/null | while read -r line; do
-    # echo "run.sh: $line"
-    # run $1
-# done

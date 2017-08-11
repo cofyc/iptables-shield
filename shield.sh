@@ -1,7 +1,4 @@
 #!/bin/bash
-#
-# Support default action.
-#
 
 # http://stackoverflow.com/a/10784612/288089
 function chain_exists() {
