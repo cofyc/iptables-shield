@@ -63,12 +63,15 @@ function setup_chain() {
             continue
         fi
         local opts_action="ACCEPT" # required (default: ACCEPT)
-        local opts_port="" # optional
-        local opts_src=""  # optional
-        local opts_dst=""  # optional
+        local opts_proto="" # optional
+        local opts_port=""  # optional
+        local opts_src=""   # optional
+        local opts_dst=""   # optional
         for o in $line; do
-            if [[ $o =~ ^dport:([0-9]+)?$ ]]; then
-                opts_port="-p tcp --dport $(echo "$o" | cut -d ':' -f 2)"
+            if [[ $o =~ ^proto:(tcp|udp)$ ]]; then
+                opts_proto="--protocol $(echo "$o" | cut -d ':' -f 2)"
+            elif [[ $o =~ ^dport:([0-9]+)?$ ]]; then
+                opts_port="--dport $(echo "$o" | cut -d ':' -f 2)"
             elif [[ $o =~ ^dst:.*$ ]]; then
                 opts_dst="--dst $(echo "$o" | cut -d ':' -f 2)"
             elif [[ $o =~ ^src:.*$ ]]; then
@@ -84,7 +87,7 @@ function setup_chain() {
         if test -z "$opts_action"; then
             exit_with_status 1 "no action specified: $line"
         fi
-        try_run iptables -A $chain $opts_port $opts_src $opts_dst -j $opts_action
+        try_run iptables -A $chain $opts_proto $opts_port $opts_src $opts_dst -j $opts_action
     done <<< "$(cat $file | sed -e 's/#.*$//' -e '/^$/d')"
 
     # Always append chain in filter table's INPUT chain.

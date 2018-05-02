@@ -1,2 +1,2 @@
-allow dport:22
+allow proto:tcp dport:22
 deny
